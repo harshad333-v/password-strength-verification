@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0d12">
+  <title>Password Verification | TOC PBL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Password verification home">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3M5 10h14v11H5z"/><path d="M12 14v3"/></svg></span>
+        <span class="brand-copy"><strong>cipher<span>lab</span></strong><small>THEORY OF COMPUTATION · PBL</small></span>
+      </a>
+      <div class="local-status"><span></span> LOCAL DEMO <i></i> NO DATA STORED</div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="overline"><span class="overline-dot"></span> FORMAL LANGUAGE ANALYZER</div>
+        <h1>Password strength,<br><em>made observable.</em></h1>
+        <p>See how a password moves through a validation policy — from regular-expression matching to deterministic finite automata.</p>
+        <div class="hero-pills"><span><b>01</b> Regex engine</span><span><b>02</b> DFA recognizer</span><span><b>03</b> State trace</span></div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+        <div class="core-lock"><svg viewBox="0 0 24 24"><path d="M7 10V7a5 5 0 0 1 10 0v3M5 10h14v11H5z"/><path d="M12 14v3"/></svg></div>
+        <div class="node node-one">q₀</div><div class="node node-two">q₁</div><div class="node node-three">qₐ</div>
+        <div class="visual-caption"><span class="live-dot"></span> STATE MACHINE READY</div>
+      </div>
+    </section>
+
+    <div class="section-heading"><div><span class="section-index">01</span><h2>Validation workspace</h2></div><span class="section-meta">POLICY VERSION 1.0</span></div>
+    <div class="columns">
+      <section class="panel input-panel">
+        <div class="panel-top"><div><span class="eyebrow">INPUT / STRING</span><h3>Test a password</h3></div><span class="panel-icon">↳</span></div>
+        <form method="post" autocomplete="off">
+          <label for="password">Password string <span>REQUIRED</span></label>
+          <div class="inputrow"><span class="input-prefix">⌘</span><input id="password" name="password" type="password" maxlength="256" required autocomplete="off" placeholder="Type a sample password"><button type="button" id="toggle" aria-label="Show password">SHOW</button></div>
+          <p class="hint"><span class="hint-icon">i</span> Use a sample only — never enter a real account password.</p>
+          <button class="primary" type="submit"><span>Run validation</span><span class="primary-arrow">↗</span></button>
+        </form>
+        <div class="examples"><span class="examples-label">QUICK TESTS</span><button type="button" data-example="Admin@123" class="example-valid"><span>✓</span> Valid sample</button><button type="button" data-example="admin@123">No uppercase</button><button type="button" data-example="Adm@12">Too short</button></div>
+        <div class="privacy-line"><span class="privacy-lock">⌑</span><span><b>Privacy by design</b><small>Local educational demo. No intentional password storage.</small></span></div>
+      </section>
+
+      <section class="panel policy-panel">
+        <div class="panel-top"><div><span class="eyebrow">POLICY / CONSTRAINTS</span><h3>Acceptance criteria</h3></div><span class="panel-icon">⌘</span></div>
+        <p class="panel-description">Every condition must be satisfied for the string to be accepted by the language.</p>
+        <ul class="rules">
+          <li><span class="rule-number">01</span><span class="rule-copy"><b>Length bounds</b><small>Between 8 and 16 characters</small></span><span class="rule-check">✓</span></li>
+          <li><span class="rule-number">02</span><span class="rule-copy"><b>Uppercase letter</b><small>At least one character A–Z</small></span><span class="rule-check">✓</span></li>
+          <li><span class="rule-number">03</span><span class="rule-copy"><b>Lowercase letter</b><small>At least one character a–z</small></span><span class="rule-check">✓</span></li>
+          <li><span class="rule-number">04</span><span class="rule-copy"><b>Numeric digit</b><small>At least one character 0–9</small></span><span class="rule-check">✓</span></li>
+          <li><span class="rule-number">05</span><span class="rule-copy"><b>Special character</b><small>At least one punctuation symbol</small></span><span class="rule-check">✓</span></li>
+          <li><span class="rule-number">06</span><span class="rule-copy"><b>Printable ASCII only</b><small>No spaces or non-ASCII characters</small></span><span class="rule-check">✓</span></li>
+        </ul>
+        <div class="policy-foot"><span class="policy-foot-mark">↗</span><span>All six rules are evaluated by the validator.</span></div>
+      </section>
+    </div>
+
+    {% if result %}
+    <section class="panel output {{ 'success' if result.valid else 'failure' }}">
+      <div class="outhead"><div><span class="eyebrow">OUTPUT / ANALYSIS</span><h3>{{ 'Password accepted' if result.valid else 'Password rejected' }}</h3><p class="muted">{{ 'All required conditions passed.' if result.valid else 'One or more requirements failed.' }}</p></div><strong class="verdict"><span></span>{{ 'ACCEPT' if result.valid else 'REJECT' }}</strong></div>
+      <div class="metrics">
+        <div><span>REGEX ENGINE</span><b class="{{ 'good' if result.regex_valid else 'bad' }}">{{ 'ACCEPT' if result.regex_valid else 'REJECT' }}</b></div>
+        <div><span>DFA RECOGNIZER</span><b class="{{ 'good' if result.dfa_valid else 'bad' }}">{{ 'ACCEPT' if result.dfa_valid else 'REJECT' }}</b></div>
+        <div><span>CONSISTENCY CHECK</span><b class="{{ 'good' if result.consistent else 'bad' }}">{{ 'MATCH' if result.consistent else 'MISMATCH' }}</b></div>
+      </div>
+      <h4>Rule-by-rule report <small>{{ result.length }} characters</small></h4>
+      <ul class="report">{% for r in result.rules %}<li><span class="{{ 'good' if r.passed else 'bad' }}">{{ '✓' if r.passed else '×' }}</span><span>{{ r.label }}</span><b class="{{ 'good' if r.passed else 'bad' }}">{{ 'PASS' if r.passed else 'FAIL' }}</b></li>{% endfor %}</ul>
+      <h4>DFA execution trace <small>State = (length, category mask)</small></h4>
+      <p class="hint">Mask bits: uppercase 0001, lowercase 0010, digit 0100, special 1000.</p>
+      <div class="tablewrap"><table><thead><tr><th>Position</th><th>Input</th><th>State</th><th>Transition</th></tr></thead><tbody>{% for s in result.trace %}<tr><td>{{ s.position }}</td><td><code>{{ s.character }}</code></td><td><code>{{ s.state }}</code></td><td>{{ s.status }}</td></tr>{% endfor %}</tbody></table></div>
+      <p class="hint">{{ 'Regex and DFA agree on this input.' if result.consistent else 'Mismatch detected; investigate the validators.' }}</p>
+    </section>
+    {% endif %}
+
+    <section class="concepts">
+      <div class="concept-card"><span>01 / THEORY</span><b>Regular language</b><p>The set of strings accepted by the defined password policy.</p><i>LANGUAGE</i></div>
+      <div class="concept-card"><span>02 / PATTERN</span><b>Regular expression</b><p>A compact pattern that checks required character categories.</p><i>REGEX</i></div>
+      <div class="concept-card"><span>03 / AUTOMATON</span><b>Deterministic finite automaton</b><p>A state machine recognizing the same formal language.</p><i>DFA</i></div>
+    </section>
+    <footer><div><span class="footer-mark">C</span><span> <b>cipherlab</b> · Password Strength Verification System</span></div><span>THEORY OF COMPUTATION · EDUCATIONAL PROJECT</span></footer>
+  </main>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
