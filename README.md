@@ -119,7 +119,7 @@ password-strength-verification/
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/harshad333-v/password-strength-verification
 cd password-strength-verification
 ```
 
